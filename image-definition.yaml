@@ -1,15 +1,15 @@
 ---
-name: ubuntu-server-riscv64-preinstalled
-display-name: Ubuntu Server RISC-V preinstalled
+name: ubuntu-server-riscv64-preinstalled-revyos
+display-name: Ubuntu Server RISC-V preinstalled by RevyOS/Ubuntu
 revision: 1
 architecture: riscv64
 series: noble
 class: preinstalled
-kernel: linux-image-generic
+kernel: linux-image-6.17.0-20-generic
 gadget:
-  url: "https://github.com/canonical/risc-v-gadget.git"
+  url: "https://github.com/revyos/risc-v-gadget.git"
   type: "git"
-  branch: "main"
+  branch: "revyos"
 rootfs:
   archive: ubuntu
   sources-list-deb822: true
@@ -18,7 +18,7 @@ rootfs:
     - restricted
     - universe
     - multiverse
-  mirror: "http://ports.ubuntu.com/ubuntu-ports/"
+  mirror: "https://ports.ubuntu.com/ubuntu-ports/"
   pocket: updates
   seed:
     urls:
@@ -33,6 +33,9 @@ customization:
   extra-packages:
     - name: "flash-kernel"
     - name: "grub-efi-riscv64"
+  extra-ppas:
+    - name: "revyos/addons-uuu"
+      fingerprint: "42AE1A61419449DDCD77C3C8857537A40279B844"
   extra-snaps:
     - name: snapd
   fstab:
@@ -49,6 +52,6 @@ customization:
       fsck-order: 1
 artifacts:
   img:
-    - name: ubuntu-24.04-preinstalled-server-riscv64.img
+    - name: ubuntu-24.04-preinstalled-server-riscv64-revyos.img
   manifest:
-    name: ubuntu-24.04-preinstalled-server-riscv64.manifest
+    name: ubuntu-24.04-preinstalled-server-riscv64-revyos.manifest

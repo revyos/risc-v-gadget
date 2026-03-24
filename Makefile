@@ -1,6 +1,8 @@
 
 SERIES ?= noble
 DESTDIR ?= install
+REVYOS_PPA ?= revyos/addons-uuu
+KERNEL_SOURCE_NAME ?= linux-riscv-6.17
 
 all:
 	mkdir -p $(DESTDIR)
@@ -8,7 +10,7 @@ all:
 	make install/dtb
 	make install/grub
 	make meta
-	make install/u-boot
+#	make install/u-boot
 
 meta:
 	mkdir -p $(DESTDIR)/meta
@@ -23,7 +25,7 @@ install/cidata:
 install/dtb:
 	rm -rf build
 	mkdir build
-	cd build && pull-lp-debs -a riscv64 linux-riscv $(SERIES)
+	cd build && pull-ppa-debs --ppa $(REVYOS_PPA) -a riscv64 $(KERNEL_SOURCE_NAME) $(SERIES)
 	cd build && dpkg -x linux-modules*.deb linux-modules/
 	mkdir -p $(DESTDIR)/dtb
 	cp -r ./build/linux-modules/lib/firmware/*-generic/device-tree/* \
@@ -33,7 +35,7 @@ install/dtb:
 install/grub:
 	rm -rf build
 	mkdir build
-	cd build && pull-lp-debs -a riscv64 grub2 $(SERIES)
+	cd build && pull-ppa-debs --ppa $(REVYOS_PPA) -a riscv64 grub2 $(SERIES)
 	cd build && dpkg -x grub-efi-riscv64-bin*.deb grub/
 	mkdir -p $(DESTDIR)/grub
 	cp ./build/grub/usr/lib/grub/riscv64-efi/monolithic/grubriscv64.efi $(DESTDIR)/grub/
