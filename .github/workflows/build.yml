@@ -1,0 +1,50 @@
+name: revyos-image
+
+on:
+  push:
+    tags:
+      - '*'
+    branches:
+      - '*'
+  pull_request:
+  workflow_dispatch:
+
+env:
+  ARCH: riscv
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Update Apt Cache
+        run: sudo apt update
+
+      - name: Install Software
+        run: |
+              sudo apt install -y git snapd qemu-user-static ubuntu-dev-tools zstd
+              sudo systemctl restart systemd-binfmt
+              sudo snap install --classic ubuntu-image
+
+      - name: Checkout Repo
+        uses: actions/checkout@v6
+
+      - name: Build
+        run: |
+              sudo snap run ubuntu-image --workdir workdir --debug classic image-definition.yaml
+              pushd workdir
+                sudo zstd *.img
+              popd
+
+      - name: Upload Image
+        uses: actions/upload-artifact@v7
+        with:
+          name: revyos-image
+          path: workdir/*.zst
+          retention-days: 30
+
+      - name: 'Upload Release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: workdir/*.zst
+          token: ${{ secrets.GITHUB_TOKEN }}
