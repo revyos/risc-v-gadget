@@ -33,6 +33,7 @@ customization:
   extra-packages:
     - name: "flash-kernel"
     - name: "grub-efi-riscv64"
+    - name: "linux-firmware"
   extra-ppas:
     - name: "revyos/addons-uuu"
       fingerprint: "42AE1A61419449DDCD77C3C8857537A40279B844"
